@@ -1,13 +1,23 @@
 
 import random
 
-
+pickedCards = []
 #generates a random card and stores it as variable 'card'
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
     cardSuit = ['SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS']
-    card = random.choice(cardNumber) + ' of ' + random.choice(cardSuit)
-    return card
+    while True:
+      card = random.choice(cardNumber) + ' of ' + random.choice(cardSuit)
+      if card not in pickedCards:
+        pickedCards.append(card)
+        return card
+        break
+      elif card in pickedCards:
+        if len(pickedCards) == 52:
+          pickCards.clear()
+            print("No more cards! Reshuffling!")
+            break
+        continue
 
 def genCardDealer():
   cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
