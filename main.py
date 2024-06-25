@@ -18,12 +18,23 @@ def genCard():
             print("No more cards! Reshuffling!")
             break
         continue
-
+#seperate function to generate cards for dealer
 def genCardDealer():
-  cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
-  cardSuit = ['SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS']
-  Dcard = random.choice(cardNumber) + ' of ' + random.choice(cardSuit)
-  return Dcard
+    cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
+    cardSuit = ['SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS']
+    while True:
+      card = random.choice(cardNumber) + ' of ' + random.choice(cardSuit)
+      if card not in pickedCards:
+        pickedCards.append(card)
+        return card
+        break
+      elif card in pickedCards:
+        if len(pickedCards) == 52:
+            pickCards.clear()
+            print("No more cards! Reshuffling!")
+            break
+        continue
+        return dcard
 
 def cardValue(card):
     number = card.split(' ')[0]
