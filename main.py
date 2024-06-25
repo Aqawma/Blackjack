@@ -14,7 +14,7 @@ def genCard():
         break
       elif card in pickedCards:
         if len(pickedCards) == 52:
-          pickCards.clear()
+            pickCards.clear()
             print("No more cards! Reshuffling!")
             break
         continue
