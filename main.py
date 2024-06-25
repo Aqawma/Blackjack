@@ -1,3 +1,4 @@
+
 import random
 
 
@@ -55,17 +56,18 @@ def checkWin():
 
 #define dealer score
 def dealerPlay():
-    dealerHand = [cardValue(genCardDealer()), cardValue(genCard())]
-    eval(dealerHand)
-    if dealerHand[0] < random.randint(16,18):
-      dealerHand.append(cardValue(genCardDealer()))
-        if de
-
+    dealerCards = [genCardDealer(), genCardDealer()]
+    dealerHand = [cardValue(dealerCards[0]), cardValue((dealerCards[1]))]
+    dealerTotal = dealerHand[0]
+    while dealerTotal < random.randint(16,18):
+        dealerHit = cardValue(genCardDealer())
+        dealerHand[0] += dealerHit
+        dealerTotal = dealerHand[0]
     return dealerHand
-
-
-
-print(dealerPlay())
+    print(dealerCards)
+    print(dealerHand)
+a = dealerPlay()
+print(a)
 #beginning of main code- sets up play again loop and introduces the game. Maybe add rules?
 playAgain = 'y'
 while playAgain == 'y':
