@@ -31,7 +31,6 @@ def genCardDealer():
       elif card in pickedCards:
         if len(pickedCards) == 52:
             pickCards.clear()
-            print("No more cards! Reshuffling!")
             break
         continue
         return dcard
