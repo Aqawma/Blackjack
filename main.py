@@ -132,6 +132,9 @@ while playAgain != 'y' and playAgain != 'n':
             if hitOrStand == 's':
                 print("You stand!")
                 time.sleep(.15)
+            else:
+                print("Invalid Input! You forfeit!")
+                time.sleep(.15)
             while hitOrStand == 'h':
                 newCard = hit()
                 userTotal = cardValue(newCard) + userTotal
@@ -141,9 +144,6 @@ while playAgain != 'y' and playAgain != 'n':
                     userBust = True
                     break
                 hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-                time.sleep(.15)
-            else:
-                print("Invalid Input! You forfeit!")
                 time.sleep(.15)
             # hit and subsequent stands loop
             if userBust is False:
