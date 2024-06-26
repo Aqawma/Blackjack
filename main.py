@@ -70,9 +70,9 @@ def hit():
 # checks player cards and determines win or loss
 def checkWin():
     dealerTotal = dealerHand[0] + dealerHand[1]
-    print(f"Your cards were {userCards}")
+    print(f"Your cards were {', '.join(userCards)}")
     print(f"Your total was {userTotal}")
-    print(f"Dealer's cards were {dealerCards}")
+    print(f"Dealer's cards were {', '.join(dealerCards)}")
     print(f"Dealer's total was {dealerTotal}")
     if (dealerTotal <= 21) and (userTotal < dealerTotal):
         print("You Lost!")
@@ -110,6 +110,8 @@ while playAgain != 'y' and playAgain != 'n':
             hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
             if hitOrStand == 's':
                 print("You stand!")
+            else:
+                print("Invalid Input! You forfeit!")
             # hit and subsequent stands loop
             while hitOrStand == 'h':
                 newCard = hit()
@@ -119,8 +121,6 @@ while playAgain != 'y' and playAgain != 'n':
                     userBust = True
                     break
                 hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-            else:
-                print("Invalid Input! You forefit!")
             if userBust is False:
                 checkWin()
             playAgain = input("Play again?(y/n)").lower()
