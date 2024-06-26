@@ -120,6 +120,8 @@ while playAgain != 'y' and playAgain != 'n':
                     userBust = True
                     break
                 hitOrStand = input("Do you want to hit or stand?(h/s)")
+            else:
+                print("Invalid Input! You forefit!")
             if userBust is False:
                 checkWin()
             playAgain = input("Play again?(y/n)")
