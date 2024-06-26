@@ -3,7 +3,7 @@
 # TODO Add gambling
 # TODO Implement ASCII art for cards
 import random
-
+import time
 pickedCards = []
 
 # generates a random card and stores it as variable 'card'
@@ -19,6 +19,7 @@ def genCard():
             if len(pickedCards) == 52:
                 pickedCards.clear()
                 print("No more cards! Reshuffling!")
+                time.sleep(.15)
                 break
             continue
 
@@ -55,6 +56,7 @@ def dealCard():
     hiddenCard = genCard()
     userOriginalCards = [visibleCard, hiddenCard]
     print(f"Your cards are {', '.join(userOriginalCards)}")
+    time.sleep(.15)
     return userOriginalCards
 
 
@@ -62,25 +64,35 @@ def dealCard():
 def hit():
     card = genCard()
     print(f"Your card is {card}")
+    time.sleep(.15)
     userCards.append(card)
     print(f"Your current cards are: {', '.join(userCards)}")
+    time.sleep(.15)
     return card
 
 # checks player cards and determines win or loss
 def checkWin():
     dealerTotal = dealerHand[0] + dealerHand[1]
     print(f"Your cards were {', '.join(userCards)}")
+    time.sleep(.15)
     print(f"Your total was {userTotal}")
+    time.sleep(.15)
     print(f"Dealer's cards were {', '.join(dealerCards)}")
+    time.sleep(.15)
     print(f"Dealer's total was {dealerTotal}")
+    time.sleep(.15)
     if (dealerTotal <= 21) and (userTotal < dealerTotal):
         print("You Lost!")
+        time.sleep(.15)
     elif (userTotal <= 21) and (userTotal > dealerTotal):
         print("You Win!")
+        time.sleep(.15)
     elif (userTotal <= 21) == (dealerTotal <= 21):
         print("You Draw!")
+        time.sleep(.15)
     elif (dealerTotal > 21) and (userTotal <= 21):
         print("You Win!")
+        time.sleep(.15)
 
 
 # define dealer score
@@ -94,37 +106,86 @@ def dealerPlay():
         dealerHand[0] += dealerHit
     return dealerHand, dealerCards
 
+def generateUserMoney():
+    money = random.randint(1,1000)
+    time.sleep(.15)
+    print(f"You have {money} dollars")
+    time.sleep(.15)
+    return money
+
+def bet(userMoney):
+    time.sleep(.15)
+    while True:
+        userBet = int(input("How much money would you like to bet? "))
+        if userBet > userMoney:
+            print(f"You don't have enough money! You can bet upto {userMoney} dollars")
+            time.sleep(.15)
+        else:
+            userMoney = userMoney - userBet
+            print(f"You bet {userBet} dollars")
+            time.sleep(.15)
+            print(f"You have {userMoney} dollars left!")
+            time.sleep(.15)
+            break
+    return userMoney, userBet
+
+
+
 userBust = False
 playAgain = True
+hitOrStand = 'dd'
+userMoney = generateUserMoney()
 while playAgain != 'y' and playAgain != 'n':
     playAgain = input("Do you want to play Blackjack?(y/n)").lower()
     if playAgain == 'y':
         while playAgain == 'y':
+            time.sleep(.15)
+            userBet = bet(userMoney)[1]
             userCards = dealCard()
             userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
             dealerHand, dealerCards = dealerPlay()
             print(f"Dealer's visible card is {dealerCards[0]}")
+            time.sleep(.15)
             # stand first turn
-            hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-            if hitOrStand == 's':
-                print("You stand!")
-            else:
-                print("Invalid Input! You forfeit!")
-            # hit and subsequent stands loop
-            while hitOrStand == 'h':
-                newCard = hit()
-                userTotal = cardValue(newCard) + userTotal
-                if userTotal > 21:
-                    print("You busted! Dealer Wins")
-                    userBust = True
+            while True:
+                hitOrStand = input("Do you want to hit, stand or double down?(h/s/dd)").lower()
+                if hitOrStand == 's':
+                    print("You stand!")
+                    time.sleep(.15)
                     break
-                hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-            if userBust is False:
-                checkWin()
-            playAgain = input("Play again?(y/n)").lower()
-            print("Thanks for playing!")
+                elif hitOrStand == 'dd':
+                    if userTotal > userBet:
+                        print("You don't have enough money!")
+                        time.sleep(.15)
+                        break
+                    else:
+                        userBet = userBet*2
+                        print(f"Your new bet is {userBet} dollars")
+                        time.sleep(.15)
+                        print(f"You have {userTotal} dollars left!")
+                        time.sleep(.15)
+                        break
+                # hit and subsequent stands loop
+                elif hitOrStand == 'h':
+                    while hitOrStand == 'h':
+                        newCard = hit()
+                        userTotal = cardValue(newCard) + userTotal
+                        hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
+                        time.sleep(.15)
+                        if userTotal > 21:
+                            print("You busted! Dealer Wins")
+                            time.sleep(.15)
+                            userBust = True
+                            break
+        if userBust is False:
+            checkWin()
+        playAgain = input("Play again?(y/n)").lower()
+        print("Thanks for playing!")
+        time.sleep(.15)
     elif playAgain == 'n':
         print("Thanks for playing!")
+        time.sleep(.15)
     else:
         print("Invalid input!")
+        time.sleep(.15)
 
