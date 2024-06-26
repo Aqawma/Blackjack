@@ -102,7 +102,6 @@ while playAgain != 'y' and playAgain != 'n':
     playAgain = input("Do you want to play Blackjack?(y/n)")
     if playAgain == 'y':
         while playAgain == 'y':
-            print(pickedCards)
             userCards = dealCard()
             userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
             dealerHand, dealerCards = dealerPlay()
