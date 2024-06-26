@@ -6,7 +6,6 @@ import random
 
 pickedCards = []
 
-
 # generates a random card and stores it as variable 'card'
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
@@ -94,7 +93,6 @@ def dealerPlay():
         dealerHit = cardValue(dealerNewCard)
         dealerHand[0] += dealerHit
     return dealerHand, dealerCards
-
 
 userBust = False
 playAgain = True
