@@ -1,13 +1,11 @@
+
 # TODO Add ace logic- if makes bust switch value to one
 # TODO Add gambling
 # TODO Implement ASCII art for cards
 import random
 
 pickedCards = []
-userCards = []
-userTotal = 0
-dealerHand = []
-dealerCards = []
+
 
 # generates a random card and stores it as variable 'card'
 def genCard():
@@ -69,7 +67,6 @@ def hit():
     print(f"Your current cards are: {', '.join(userCards)}")
     return card
 
-
 # checks player cards and determines win or loss
 def checkWin():
     dealerTotal = dealerHand[0] + dealerHand[1]
@@ -99,39 +96,37 @@ def dealerPlay():
     return dealerHand, dealerCards
 
 
-def mainGame():
-    userBust = False
-    playAgain = True
-    while playAgain != 'y' and playAgain != 'n':
-        playAgain = input("Do you want to play Blackjack?(y/n)").lower()
-        if playAgain == 'y':
-            while playAgain == 'y':
-                userCards = dealCard()
-                userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
-                dealerHand, dealerCards = dealerPlay()
-                print(f"Dealer's visible card is {dealerCards[0]}")
-                # stand first turn
+userBust = False
+playAgain = True
+while playAgain != 'y' and playAgain != 'n':
+    playAgain = input("Do you want to play Blackjack?(y/n)").lower()
+    if playAgain == 'y':
+        while playAgain == 'y':
+            userCards = dealCard()
+            userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
+            dealerHand, dealerCards = dealerPlay()
+            print(f"Dealer's visible card is {dealerCards[0]}")
+            # stand first turn
+            hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
+            if hitOrStand == 's':
+                print("You stand!")
+            # hit and subsequent stands loop
+            while hitOrStand == 'h':
+                newCard = hit()
+                userTotal = cardValue(newCard) + userTotal
+                if userTotal > 21:
+                    print("You busted! Dealer Wins")
+                    userBust = True
+                    break
                 hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-                if hitOrStand == 's':
-                    print("You stand!")
-                # hit and subsequent stands loop
-                while hitOrStand == 'h':
-                    newCard = hit()
-                    userTotal = cardValue(newCard) + userTotal
-                    if userTotal > 21:
-                        print("You busted! Dealer Wins")
-                        userBust = True
-                        break
-                    hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-                else:
-                    print("Invalid Input! You forefit!")
-                if userBust is False:
-                    checkWin()
-                playAgain = input("Play again?(y/n)").lower()
-                print("Thanks for playing!")
-        elif playAgain == 'n':
+            else:
+                print("Invalid Input! You forefit!")
+            if userBust is False:
+                checkWin()
+            playAgain = input("Play again?(y/n)").lower()
             print("Thanks for playing!")
-        else:
-            print("Invalid input!")
+    elif playAgain == 'n':
+        print("Thanks for playing!")
+    else:
+        print("Invalid input!")
 
-mainGame()
