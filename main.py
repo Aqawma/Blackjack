@@ -130,4 +130,3 @@ while playAgain != 'y' and playAgain != 'n':
         print("Thanks for playing!")
     else:
         print("Invalid input!")
-
