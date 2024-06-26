@@ -99,7 +99,7 @@ def dealerPlay():
 userBust = False
 playAgain = True
 while playAgain != 'y' and playAgain != 'n':
-    playAgain = input("Do you want to play Blackjack?(y/n)")
+    playAgain = input("Do you want to play Blackjack?(y/n)").lower()
     if playAgain == 'y':
         while playAgain == 'y':
             userCards = dealCard()
@@ -107,7 +107,7 @@ while playAgain != 'y' and playAgain != 'n':
             dealerHand, dealerCards = dealerPlay()
             print(f"Dealer's visible card is {dealerCards[0]}")
             # stand first turn
-            hitOrStand = input("Do you want to hit or stand?(h/s)")
+            hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
             if hitOrStand == 's':
                 print("You stand!")
             # hit and subsequent stands loop
@@ -118,12 +118,12 @@ while playAgain != 'y' and playAgain != 'n':
                     print("You busted! Dealer Wins")
                     userBust = True
                     break
-                hitOrStand = input("Do you want to hit or stand?(h/s)")
+                hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
             else:
                 print("Invalid Input! You forefit!")
             if userBust is False:
                 checkWin()
-            playAgain = input("Play again?(y/n)")
+            playAgain = input("Play again?(y/n)").lower()
             print("Thanks for playing!")
     elif playAgain == 'n':
         print("Thanks for playing!")
