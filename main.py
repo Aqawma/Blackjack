@@ -71,7 +71,7 @@ def hit():
     return card
 
 # checks player cards and determines win or loss
-def checkWin():
+def checkWin(userMoney):
     dealerTotal = dealerHand[0] + dealerHand[1]
     print(f"Your cards were {', '.join(userCards)}")
     time.sleep(.15)
@@ -82,20 +82,32 @@ def checkWin():
     print(f"Dealer's total was {dealerTotal}")
     time.sleep(.15)
     if (dealerTotal <= 21) and (userTotal < dealerTotal):
+        userMoney = userMoney
         print("You Lost!")
+        print(f"You lost {userBet} dollars!")
         time.sleep(.15)
     elif (userTotal <= 21) and (userTotal > dealerTotal):
         print("You Win!")
+        userMoney = userBet*2 + userMoney
+        print(f"You won {userBet*2} dollars!")
         time.sleep(.15)
+        return userMoney
     elif (userTotal <= 21) == (dealerTotal <= 21):
-        print("You Draw!")
+        print("You Draw, no one lost anything!")
+        userMoney = userBet + userMoney
         time.sleep(.15)
     elif (dealerTotal > 21) and (userTotal <= 21):
+        userMoney = userBet*2 + userMoney
         print("Dealer busted!")
         time.sleep(.15)
         print("You Win!")
+        print(f"You won {userBet*2} dollars!")
         time.sleep(.15)
+    return userMoney
 
+def delayPrint(text):
+    print(text)
+    time.sleep(.15)
 
 # define dealer score
 def dealerPlay():
@@ -132,14 +144,13 @@ def bet(userMoney):
     return userMoney, userBet
 
 
-
-userBust = False
 userMoney = generateUserMoney()
 playAgain = True
 while playAgain != 'y' and playAgain != 'n':
     playAgain = input("Do you want to play Blackjack?(y/n)").lower()
     if playAgain == 'y':
-        while playAgain == 'y':
+        while playAgain == 'y' and userMoney != 0:
+            userBust = False
             userMoney, userBet = bet(userMoney)
             userCards = dealCard()
             userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
@@ -152,15 +163,16 @@ while playAgain != 'y' and playAgain != 'n':
                     time.sleep(.15)
                     break
                 elif hitOrStand == 'dd':
-                    if userTotal > userBet:
+                    if userMoney < userBet:
                         print("You don't have enough money!")
                         time.sleep(.15)
                         continue
                     else:
+                        userMoney = userMoney - userBet
                         userBet = userBet * 2
                         print(f"Your new bet is {userBet} dollars")
                         time.sleep(.15)
-                        print(f"You have {userTotal} dollars left!")
+                        print(f"You have {userMoney} dollars left!")
                         time.sleep(.15)
                         newCard = hit()
                         userTotal = cardValue(newCard) + userTotal
@@ -168,6 +180,7 @@ while playAgain != 'y' and playAgain != 'n':
                             print("You busted! Dealer Wins")
                             time.sleep(.15)
                             userBust = True
+                            print(f"You lost {userBet} dollars!")
                             break
                         else:
                             break
@@ -177,17 +190,17 @@ while playAgain != 'y' and playAgain != 'n':
                     userTotal = cardValue(newCard) + userTotal
                     if userTotal > 21:
                         print("You busted! Dealer Wins")
+                        print(f"You lost {userBet} dollars!")
                         time.sleep(.15)
                         userBust = True
+                        print("Thanks for playing!")
                         break
-                    hitOrStand = input("Do you want to hit or stand?(h/s)").lower()
-                    time.sleep(.15)
-            if userBust:
-                break
+
             if not userBust:
-                checkWin()
+                dealerTotal = sum(dealerHand)
+                userMoney = checkWin(userMoney)
             playAgain = input("Play again?(y/n)").lower()
-            print("Thanks for playing!")
+            print(f"You have {userMoney} dollars left!")
             time.sleep(.15)
     elif playAgain == 'n':
         time.sleep(.15)
