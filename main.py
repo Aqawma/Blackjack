@@ -100,13 +100,13 @@ def delayPrint(text):
 # define dealer score
 def dealerPlay():
     dealerCards = [genCardDealer(), genCardDealer()]
-    dealerHand = [cardValue(dealerCards[0]), cardValue((dealerCards[1]))]
-    while (dealerHand[0] + dealerHand[1]) < random.randint(16, 18):
+    dealerTotal = cardValue(dealerCards[0]) + cardValue(dealerCards[1])
+    while dealerTotal < random.randint(16, 18):
         dealerNewCard = genCardDealer()
         dealerCards.append(dealerNewCard)
         dealerHit = cardValue(dealerNewCard)
-        dealerHand[0] += dealerHit
-    return dealerHand, dealerCards
+        dealerTotal = dealerHit + dealerTotal
+    return dealerTotal, dealerCards
 
 def generateUserMoney():
     money = random.randint(1,1000)
