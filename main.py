@@ -18,8 +18,7 @@ def genCard():
         elif card in pickedCards:
             if len(pickedCards) == 52:
                 pickedCards.clear()
-                print("No more cards! Reshuffling!")
-                time.sleep(.15)
+                delayPrint("No more cards! Reshuffling!")
                 break
             continue
 
@@ -55,59 +54,48 @@ def dealCard():
     visibleCard = genCard()
     hiddenCard = genCard()
     userOriginalCards = [visibleCard, hiddenCard]
-    print(f"Your cards are {', '.join(userOriginalCards)}")
-    time.sleep(.15)
+    delayPrint(f"Your cards are {', '.join(userOriginalCards)}")
     return userOriginalCards
 
 
 # deals user a single card
 def hit():
     card = genCard()
-    print(f"Your card is {card}")
-    time.sleep(.15)
+    delayPrint(f"Your card is {card}")
     userCards.append(card)
-    print(f"Your current cards are: {', '.join(userCards)}")
-    time.sleep(.15)
+    delayPrint(f"Your current cards are: {', '.join(userCards)}")
     return card
 
 # checks player cards and determines win or loss
 def checkWin(userMoney):
     dealerTotal = dealerHand[0] + dealerHand[1]
-    print(f"Your cards were {', '.join(userCards)}")
-    time.sleep(.15)
-    print(f"Your total was {userTotal}")
-    time.sleep(.15)
-    print(f"Dealer's cards were {', '.join(dealerCards)}")
-    time.sleep(.15)
-    print(f"Dealer's total was {dealerTotal}")
-    time.sleep(.15)
+    delayPrint(f"Your cards were {', '.join(userCards)}")
+    delayPrint(f"Your total was {userTotal}")
+    delayPrint(f"Dealer's cards were {', '.join(dealerCards)}")
+    delayPrint(f"Dealer's total was {dealerTotal}")
     if (dealerTotal <= 21) and (userTotal < dealerTotal):
         userMoney = userMoney
-        print("You Lost!")
-        print(f"You lost {userBet} dollars!")
-        time.sleep(.15)
+        delayPrint("You Lost!")
+        delayPrint(f"You lost {userBet} dollars!")
     elif (userTotal <= 21) and (userTotal > dealerTotal):
-        print("You Win!")
+        delayPrint("You Win!")
         userMoney = userBet*2 + userMoney
-        print(f"You won {userBet*2} dollars!")
-        time.sleep(.15)
+        delayPrint(f"You won {userBet*2} dollars!")
         return userMoney
     elif (userTotal <= 21) == (dealerTotal <= 21):
-        print("You Draw, no one lost anything!")
+        delayPrint("You Draw, no one lost anything!")
         userMoney = userBet + userMoney
-        time.sleep(.15)
     elif (dealerTotal > 21) and (userTotal <= 21):
         userMoney = userBet*2 + userMoney
-        print("Dealer busted!")
-        time.sleep(.15)
-        print("You Win!")
-        print(f"You won {userBet*2} dollars!")
-        time.sleep(.15)
+        delayPrint("Dealer busted!")
+        delayPrint("You Win!")
+        delayPrint(f"You won {userBet*2} dollars!")
+        
     return userMoney
 
 def delayPrint(text):
-    print(text)
     time.sleep(.15)
+    print(text)
 
 # define dealer score
 def dealerPlay():
@@ -122,24 +110,20 @@ def dealerPlay():
 
 def generateUserMoney():
     money = random.randint(1,1000)
-    time.sleep(.15)
-    print(f"You have {money} dollars")
-    time.sleep(.15)
+    delayPrint(f"You have {money} dollars")
     return money
 
 def bet(userMoney):
-    time.sleep(.15)
+
     while True:
+        time.sleep(.15)
         userBet = int(input("How much money would you like to bet? "))
         if userBet > userMoney:
-            print(f"You don't have enough money! You can bet upto {userMoney} dollars")
-            time.sleep(.15)
+            delayPrint(f"You don't have enough money! You can bet upto {userMoney} dollars")
         else:
             userMoney = userMoney - userBet
-            print(f"You bet {userBet} dollars")
-            time.sleep(.15)
-            print(f"You have {userMoney} dollars left!")
-            time.sleep(.15)
+            delayPrint(f"You bet {userBet} dollars")
+            delayPrint(f"You have {userMoney} dollars left!")
             break
     return userMoney, userBet
 
@@ -147,6 +131,7 @@ def bet(userMoney):
 userMoney = generateUserMoney()
 playAgain = True
 while playAgain != 'y' and playAgain != 'n':
+    time.sleep(.15)
     playAgain = input("Do you want to play Blackjack?(y/n)").lower()
     if playAgain == 'y':
         while playAgain == 'y' and userMoney != 0:
@@ -155,32 +140,28 @@ while playAgain != 'y' and playAgain != 'n':
             userCards = dealCard()
             userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
             dealerHand, dealerCards = dealerPlay()
-            print(f"Dealer's visible card is {dealerCards[0]}")
+            delayPrint(f"Dealer's visible card is {dealerCards[0]}")
             while True:
+                time.sleep(.15)
                 hitOrStand = input("Do you want to hit, stand or double down?(h/s/dd)").lower()
                 if hitOrStand == 's':
-                    print("You stand!")
-                    time.sleep(.15)
+                    delayPrint("You stand!")
                     break
                 elif hitOrStand == 'dd':
                     if userMoney < userBet:
-                        print("You don't have enough money!")
-                        time.sleep(.15)
+                        delayPrint("You don't have enough money!")
                         continue
                     else:
                         userMoney = userMoney - userBet
                         userBet = userBet * 2
-                        print(f"Your new bet is {userBet} dollars")
-                        time.sleep(.15)
-                        print(f"You have {userMoney} dollars left!")
-                        time.sleep(.15)
+                        delayPrint(f"Your new bet is {userBet} dollars")
+                        delayPrint(f"You have {userMoney} dollars left!")
                         newCard = hit()
                         userTotal = cardValue(newCard) + userTotal
                         if userTotal > 21:
-                            print("You busted! Dealer Wins")
-                            time.sleep(.15)
+                            delayPrint("You busted! Dealer Wins")
                             userBust = True
-                            print(f"You lost {userBet} dollars!")
+                            delayPrint(f"You lost {userBet} dollars!")
                             break
                         else:
                             break
@@ -189,23 +170,20 @@ while playAgain != 'y' and playAgain != 'n':
                     newCard = hit()
                     userTotal = cardValue(newCard) + userTotal
                     if userTotal > 21:
-                        print("You busted! Dealer Wins")
-                        print(f"You lost {userBet} dollars!")
-                        time.sleep(.15)
+                        delayPrint("You busted! Dealer Wins")
+                        delayPrint(f"You lost {userBet} dollars!")
                         userBust = True
-                        print("Thanks for playing!")
+                        delayPrint("Thanks for playing!")
                         break
-
             if not userBust:
                 dealerTotal = sum(dealerHand)
                 userMoney = checkWin(userMoney)
-            playAgain = input("Play again?(y/n)").lower()
-            print(f"You have {userMoney} dollars left!")
             time.sleep(.15)
+            playAgain = input("Play again?(y/n)").lower()
+            delayPrint(f"You have {userMoney} dollars left!")
     elif playAgain == 'n':
-        time.sleep(.15)
-        print("Thanks for playing!")
+        delayPrint("Thanks for playing!")
     else:
-        print("Invalid input!")
-        time.sleep(.15)
+        delayPrint("Invalid input!")
+        
 
