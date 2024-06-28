@@ -6,6 +6,7 @@ import random
 import time
 pickedCards = []
 
+
 # generates a random card and stores it as variable 'card'
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
@@ -89,8 +90,7 @@ def checkWin(userMoney):
         userMoney = userBet*2 + userMoney
         delayPrint("Dealer busted!")
         delayPrint("You Win!")
-        delayPrint(f"You won {userBet*2} dollars!")
-        
+        delayPrint(f"You won {userBet*2} dollars!")   
     return userMoney
 
 def delayPrint(text):
@@ -114,7 +114,6 @@ def generateUserMoney():
     return money
 
 def bet(userMoney):
-
     while True:
         time.sleep(.15)
         userBet = int(input("How much money would you like to bet? "))
@@ -133,6 +132,7 @@ playAgain = True
 while playAgain != 'y' and playAgain != 'n':
     time.sleep(.15)
     playAgain = input("Do you want to play Blackjack?(y/n)").lower()
+    time.sleep(.15)
     if playAgain == 'y':
         while playAgain == 'y' and userMoney != 0:
             userBust = False
