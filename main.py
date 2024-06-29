@@ -6,6 +6,13 @@ import random
 import time
 pickedCards = []
 
+class Card:
+    def __init__(self, suit, rank, shown, played, design):
+        self.suit = suit
+        self.rank = rank
+        self.shown = shown
+        self.played = played
+        self.design = design
 # generates a random card and stores it as variable 'card'
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
@@ -194,3 +201,34 @@ while playAgain != 'y' and playAgain != 'n':
         delayPrint("Thanks for playing!")
     else:
         delayPrint("Invalid input!")
+def cardParse(card):
+    number = card.split(' ')[0]
+    suit = card.split(' ')[2]
+    parsedCard = [number, suit]
+    return parsedCard
+def cardPrint(parsedCard):
+    global number, suit
+    if parsedCard[0] == 'ACE':
+        number = 'A'
+    elif parsedCard[0] == 'JACK':
+        number = 'J'
+    elif parsedCard[0] == 'QUEEN':
+        number = 'Q'
+    elif parsedCard[0] == 'KING':
+        number = 'K'
+    if parsedCard[2] == 'SPADES':
+        suit = '♠'
+    elif parsedCard[2] == 'CLUBS':
+        suit = '♣'
+    elif parsedCard[2] == 'DIAMONDS':
+        suit = '♦'
+    elif parsedCard[2] == 'HEARTS':
+        suit = '♥'
+    print("┌───┐")
+    print(f"│{number} {suit}│")
+    print(f"│{suit} {number}│")
+    print("└───┘")
+    cardLineTwo = f"│{number} {suit}│"
+    cardLineThree = f"│{suit} {number}│"
+    cardParts = [cardLineTwo, cardLineThree]
+    brokenCards.append(cardParts)
