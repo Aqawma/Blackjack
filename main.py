@@ -6,7 +6,6 @@ import random
 import time
 pickedCards = []
 
-
 # generates a random card and stores it as variable 'card'
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
@@ -93,15 +92,15 @@ def dealerPlay():
     dealerCards = [genCard(), genCard()]
     dealerTotal = cardValue(dealerCards[0]) + cardValue(dealerCards[1])
     if dealerTotal > 21:
-        aceCheck(dealerCards, dealerTotal)
+        dealerTotal = aceCheck(dealerCards, dealerTotal)
     while dealerTotal < random.randint(16, 18):
         dealerNewCard = genCard()
         dealerCards.append(dealerNewCard)
         dealerHit = cardValue(dealerNewCard)
         dealerTotal = dealerHit + dealerTotal
-        aceCheck(dealerCards, dealerTotal)
-        if dealerTotal > 21:
-            aceCheck(dealerCards, dealerTotal)
+        dealerTotal = aceCheck(dealerCards, dealerTotal)
+    if dealerTotal > 21:
+        dealerTotal = aceCheck(dealerCards, dealerTotal)
     return dealerTotal, dealerCards
 
 def generateUserMoney():
@@ -172,7 +171,7 @@ while playAgain != 'y' and playAgain != 'n':
                         delayPrint(f"You have {userMoney} dollars left!")
                         newCard = hit()
                         userTotal = cardValue(newCard) + userTotal
-                        aceCheck(userCards, userTotal)
+                        userTotal = aceCheck(userCards, userTotal)
                         doubleDownProtection.append(hitOrStand)
                         if userTotal > 21:
                             break
