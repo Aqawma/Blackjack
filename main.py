@@ -35,22 +35,29 @@ def dealCard():
     visibleCard = genCard()
     hiddenCard = genCard()
     userOriginalCards = [visibleCard, hiddenCard]
+    delayPrint("Your cards are:")
     showHand(userOriginalCards)
     return userOriginalCards
 
 # deals user a single card
 def hit():
     card = genCard()
-    delayPrint(f"Your card is {card}")
+    hitCard = [card]
+    delayPrint("Hit!")
+    delayPrint("Your new card is:")
+    showHand(hitCard)
     userCards.append(card)
-    delayPrint(f"Your current cards are: {', '.join(userCards)}")
+    delayPrint("Your current hand is:")
+    showHand(userCards)
     return card
 
 # checks player cards and determines win or loss
 def checkWin(userMoney):
-    delayPrint(f"Your cards were {', '.join(userCards)}")
+    delayPrint("Your cards were:")
+    showHand(userCards)
     delayPrint(f"Your total was {userTotal}")
-    delayPrint(f"Dealer's cards were {', '.join(dealerCards)}")
+    delayPrint(f"Dealer's cards were:")
+    showHand(dealerCards)
     delayPrint(f"Dealer's total was {dealerTotal}")
     if (dealerTotal <= 21) and (userTotal < dealerTotal):
         userMoney = userMoney
@@ -82,7 +89,12 @@ def checkWin(userMoney):
 def delayPrint(text):
     time.sleep(.15)
     print(text)
+    time.sleep(.15)
 
+def smallDelayPrint(text):
+    time.sleep(.1)
+    print(text)
+    time.sleep(.1)
 # define dealer score
 def dealerPlay():
     dealerCards = [genCard(), genCard()]
@@ -187,22 +199,18 @@ def cardPaste(brokenCards):
     topMidList = []
     bottomMidList = []
     bottomList = []
-    if brokenCards[1][1] == '│░░░░│':
-        delayPrint("Dealers cards are:")
-    else:
-        delayPrint("Your cards are:")
     for n in range(len(brokenCards)):
         topList.append("┌────┐")
-    print(f"{' '.join(topList)}")
+    smallDelayPrint(f"{' '.join(topList)}")
     for n in range(len(brokenCards)):
         topMidList.append(brokenCards[n][0])
-    print(f"{' '.join(topMidList)}")
+    smallDelayPrint(f"{' '.join(topMidList)}")
     for n in range(len(brokenCards)):
         bottomMidList.append(brokenCards[n][1])
-    print(f"{' '.join(bottomMidList)}")
+    smallDelayPrint(f"{' '.join(bottomMidList)}")
     for n in range(len(brokenCards)):
         bottomList.append("└────┘")
-    print(f"{' '.join(bottomList)}")
+    smallDelayPrint(f"{' '.join(bottomList)}")
 
 def showHand(userHand):
     brokenCards = []
@@ -228,6 +236,7 @@ while playAgain != 'y' and playAgain != 'n':
             dealerTotal, dealerCards = dealerPlay()
             doubleDownProtection = []
             singleDealerCard = [dealerCards[0], 'BLANK of BLANK']
+            delayPrint("Dealer's cards are:")
             showHand(singleDealerCard)
             while True:
                 time.sleep(.15)
