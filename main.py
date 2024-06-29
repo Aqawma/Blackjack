@@ -19,24 +19,8 @@ def genCard():
         elif card in pickedCards:
             if len(pickedCards) == 52:
                 pickedCards.clear()
+                aceStorage.clear()
                 delayPrint("No more cards! Reshuffling!")
-                break
-            continue
-
-
-# separate function to generate cards for dealer
-def genCardDealer():
-    cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
-    cardSuit = ['SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS']
-    while True:
-        card = random.choice(cardNumber) + ' of ' + random.choice(cardSuit)
-        if card not in pickedCards:
-            pickedCards.append(card)
-            return card
-        elif card in pickedCards:
-            if len(pickedCards) == 52:
-                pickedCards.clear()
-                break
             continue
 
 
@@ -69,7 +53,6 @@ def hit():
 
 # checks player cards and determines win or loss
 def checkWin(userMoney):
-    dealerTotal = dealerHand[0] + dealerHand[1]
     delayPrint(f"Your cards were {', '.join(userCards)}")
     delayPrint(f"Your total was {userTotal}")
     delayPrint(f"Dealer's cards were {', '.join(dealerCards)}")
@@ -90,7 +73,15 @@ def checkWin(userMoney):
         userMoney = userBet*2 + userMoney
         delayPrint("Dealer busted!")
         delayPrint("You Win!")
-        delayPrint(f"You won {userBet*2} dollars!")   
+        delayPrint(f"You won {userBet*2} dollars!")
+    elif (userTotal > 21) and (dealerTotal <= 21):
+        delayPrint("You busted!")
+        delayPrint("You Lost!")
+        delayPrint(f"You lost {userBet} dollars!")
+    elif (dealerTotal > 21) and (userTotal > 21):
+        delayPrint("You both lost!")
+        delayPrint("No one lost any money!")
+        userMoney = userBet + userMoney
     return userMoney
 
 def delayPrint(text):
@@ -99,14 +90,19 @@ def delayPrint(text):
 
 # define dealer score
 def dealerPlay():
-    dealerCards = [genCardDealer(), genCardDealer()]
-    dealerHand = [cardValue(dealerCards[0]), cardValue((dealerCards[1]))]
-    while (dealerHand[0] + dealerHand[1]) < random.randint(16, 18):
-        dealerNewCard = genCardDealer()
+    dealerCards = [genCard(), genCard()]
+    dealerTotal = cardValue(dealerCards[0]) + cardValue(dealerCards[1])
+    if dealerTotal > 21:
+        aceCheck(dealerCards, dealerTotal)
+    while dealerTotal < random.randint(16, 18):
+        dealerNewCard = genCard()
         dealerCards.append(dealerNewCard)
         dealerHit = cardValue(dealerNewCard)
-        dealerHand[0] += dealerHit
-    return dealerHand, dealerCards
+        dealerTotal = dealerHit + dealerTotal
+        aceCheck(dealerCards, dealerTotal)
+        if dealerTotal > 21:
+            aceCheck(dealerCards, dealerTotal)
+    return dealerTotal, dealerCards
 
 def generateUserMoney():
     money = random.randint(1,1000)
@@ -116,7 +112,13 @@ def generateUserMoney():
 def bet(userMoney):
     while True:
         time.sleep(.15)
-        userBet = int(input("How much money would you like to bet? "))
+        while True:
+            userBet = input("How much money would you like to bet? ")
+            try:
+                userBet = int(userBet)
+                break
+            except ValueError:
+                delayPrint("Please enter a number!")
         if userBet > userMoney:
             delayPrint(f"You don't have enough money! You can bet upto {userMoney} dollars")
         else:
@@ -126,7 +128,17 @@ def bet(userMoney):
             break
     return userMoney, userBet
 
+def aceCheck(userCards, userTotal):
+    checkSet = ['ACE of DIAMONDS', 'ACE of HEARTS', 'ACE of SPADES', 'ACE of CLUBS']
+    for element in checkSet:
+        if element in userCards and userTotal > 21 and element not in aceStorage:
+            aceStorage.append(element)
+            userTotal = userTotal - 10
+            break
+    return userTotal
 
+
+aceStorage = []
 userMoney = generateUserMoney()
 playAgain = True
 while playAgain != 'y' and playAgain != 'n':
@@ -139,7 +151,9 @@ while playAgain != 'y' and playAgain != 'n':
             userMoney, userBet = bet(userMoney)
             userCards = dealCard()
             userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
-            dealerHand, dealerCards = dealerPlay()
+            userTotal = aceCheck(userCards, userTotal)
+            dealerTotal, dealerCards = dealerPlay()
+            doubleDownProtection = []
             delayPrint(f"Dealer's visible card is {dealerCards[0]}")
             while True:
                 time.sleep(.15)
@@ -151,39 +165,33 @@ while playAgain != 'y' and playAgain != 'n':
                     if userMoney < userBet:
                         delayPrint("You don't have enough money!")
                         continue
-                    else:
+                    elif not doubleDownProtection:
                         userMoney = userMoney - userBet
                         userBet = userBet * 2
                         delayPrint(f"Your new bet is {userBet} dollars")
                         delayPrint(f"You have {userMoney} dollars left!")
                         newCard = hit()
                         userTotal = cardValue(newCard) + userTotal
+                        aceCheck(userCards, userTotal)
+                        doubleDownProtection.append(hitOrStand)
                         if userTotal > 21:
-                            delayPrint("You busted! Dealer Wins")
-                            userBust = True
-                            delayPrint(f"You lost {userBet} dollars!")
                             break
-                        else:
-                            break
+                    else:
+                        delayPrint("You have already hit! You can't double down!")
                 # hit and subsequent stands loop
                 elif hitOrStand == 'h':
                     newCard = hit()
                     userTotal = cardValue(newCard) + userTotal
+                    userTotal = aceCheck(userCards, userTotal)
+                    doubleDownProtection.append(hitOrStand)
                     if userTotal > 21:
-                        delayPrint("You busted! Dealer Wins")
-                        delayPrint(f"You lost {userBet} dollars!")
-                        userBust = True
-                        delayPrint("Thanks for playing!")
                         break
-            if not userBust:
-                dealerTotal = sum(dealerHand)
-                userMoney = checkWin(userMoney)
-            time.sleep(.15)
+                else:
+                    delayPrint("Invalid input!")
+            userMoney = checkWin(userMoney)
             playAgain = input("Play again?(y/n)").lower()
             delayPrint(f"You have {userMoney} dollars left!")
     elif playAgain == 'n':
         delayPrint("Thanks for playing!")
     else:
         delayPrint("Invalid input!")
-        
-
