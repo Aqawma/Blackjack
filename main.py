@@ -293,8 +293,7 @@ while playAgain != 'y' and playAgain != 'n':
                         userTotal = cardValue(newCard) + userTotal
                         userTotal = aceCheck(userCards, userTotal)
                         doubleDownProtection.append(hitOrStand)
-                        if userTotal > 21:
-                            break
+                        break
                     else:
                         delayPrint("You have already hit! You can't double down!")
                 elif hitOrStand == 'h':
