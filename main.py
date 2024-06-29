@@ -73,7 +73,15 @@ def checkWin(userMoney):
         userMoney = userBet*2 + userMoney
         delayPrint("Dealer busted!")
         delayPrint("You Win!")
-        delayPrint(f"You won {userBet*2} dollars!")   
+        delayPrint(f"You won {userBet*2} dollars!")
+    elif (userTotal > 21) and (dealerTotal <= 21):
+        delayPrint("You busted!")
+        delayPrint("You Lost!")
+        delayPrint(f"You lost {userBet} dollars!")
+    elif (dealerTotal > 21) and (userTotal > 21):
+        delayPrint("You both lost!")
+        delayPrint("No one lost any money!")
+        userMoney = userBet + userMoney
     return userMoney
 
 def delayPrint(text):
@@ -104,7 +112,13 @@ def generateUserMoney():
 def bet(userMoney):
     while True:
         time.sleep(.15)
-        userBet = int(input("How much money would you like to bet? "))
+        while True:
+            userBet = input("How much money would you like to bet? ")
+            try:
+                userBet = int(userBet)
+                break
+            except ValueError:
+                delayPrint("Please enter a number!")
         if userBet > userMoney:
             delayPrint(f"You don't have enough money! You can bet upto {userMoney} dollars")
         else:
@@ -139,6 +153,7 @@ while playAgain != 'y' and playAgain != 'n':
             userTotal = cardValue(userCards[0]) + cardValue(userCards[1])
             userTotal = aceCheck(userCards, userTotal)
             dealerTotal, dealerCards = dealerPlay()
+            doubleDownProtection = []
             delayPrint(f"Dealer's visible card is {dealerCards[0]}")
             while True:
                 time.sleep(.15)
@@ -150,7 +165,7 @@ while playAgain != 'y' and playAgain != 'n':
                     if userMoney < userBet:
                         delayPrint("You don't have enough money!")
                         continue
-                    else:
+                    elif not doubleDownProtection:
                         userMoney = userMoney - userBet
                         userBet = userBet * 2
                         delayPrint(f"Your new bet is {userBet} dollars")
@@ -158,28 +173,22 @@ while playAgain != 'y' and playAgain != 'n':
                         newCard = hit()
                         userTotal = cardValue(newCard) + userTotal
                         aceCheck(userCards, userTotal)
+                        doubleDownProtection.append(hitOrStand)
                         if userTotal > 21:
-                            delayPrint("You busted! Dealer Wins")
-                            delayPrint(f"Dealer's cards were {', '.join(dealerCards)}")
-                            userBust = True
-                            delayPrint(f"You lost {userBet} dollars!")
                             break
-                        else:
-                            break
+                    else:
+                        delayPrint("You have already hit! You can't double down!")
                 # hit and subsequent stands loop
                 elif hitOrStand == 'h':
                     newCard = hit()
                     userTotal = cardValue(newCard) + userTotal
                     userTotal = aceCheck(userCards, userTotal)
+                    doubleDownProtection.append(hitOrStand)
                     if userTotal > 21:
-                        delayPrint("You busted! Dealer Wins")
-                        delayPrint(f"Dealer's cards were {', '.join(dealerCards)}")
-                        delayPrint(f"You lost {userBet} dollars!")
-                        userBust = True
-                        delayPrint("Thanks for playing!")
                         break
-            if not userBust:
-                userMoney = checkWin(userMoney)
+                else:
+                    delayPrint("Invalid input!")
+            userMoney = checkWin(userMoney)
             playAgain = input("Play again?(y/n)").lower()
             delayPrint(f"You have {userMoney} dollars left!")
     elif playAgain == 'n':
