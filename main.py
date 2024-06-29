@@ -1,11 +1,8 @@
-
-# TODO Add ace logic- if makes bust switch value to one
-# TODO Add gambling
-# TODO Implement ASCII art for cards
 import random
 import time
 pickedCards = []
-# generates a random card and stores it as variable 'card'
+
+# generates a random card
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
     cardSuit = ['SPADES', 'HEARTS', 'DIAMONDS', 'CLUBS']
@@ -21,6 +18,7 @@ def genCard():
                 delayPrint("No more cards! Reshuffling!")
             continue
 
+# determines value of a card
 def cardValue(card):
     number = card.split(' ')[0]
     if number == 'ACE':
@@ -30,7 +28,7 @@ def cardValue(card):
     else:
         return int(number)
 
-# deal a card the user can see one and can't see the other. ask user if they want to hit or stand
+# deals user cards
 def dealCard():
     visibleCard = genCard()
     hiddenCard = genCard()
@@ -39,7 +37,7 @@ def dealCard():
     showHand(userOriginalCards)
     return userOriginalCards
 
-# deals user a single card
+# deals user a single card called a hit
 def hit():
     card = genCard()
     hitCard = [card]
@@ -51,7 +49,7 @@ def hit():
     showHand(userCards)
     return card
 
-# checks player cards and determines win or loss
+# checks player cards against dealer cards to determine a win or loss
 def checkWin(userMoney):
     delayPrint("Your cards were:")
     showHand(userCards)
@@ -86,16 +84,19 @@ def checkWin(userMoney):
         userMoney = userBet + userMoney
     return userMoney
 
+# delays printing of text by .15 seconds to make reading easier
 def delayPrint(text):
     time.sleep(.15)
     print(text)
     time.sleep(.15)
 
+# delays printing of text by .1 seconds to make reading easier used mostly in printing cards
 def smallDelayPrint(text):
     time.sleep(.1)
     print(text)
     time.sleep(.1)
-# define dealer score
+
+# plays the whole game for the dealer and determines score
 def dealerPlay():
     dealerCards = [genCard(), genCard()]
     dealerTotal = cardValue(dealerCards[0]) + cardValue(dealerCards[1])
@@ -111,11 +112,13 @@ def dealerPlay():
         dealerTotal = aceCheck(dealerCards, dealerTotal)
     return dealerTotal, dealerCards
 
+# generates a random amount of money between 1-1000 for the user to start betting with
 def generateUserMoney():
     money = random.randint(1,1000)
     delayPrint(f"You have {money} dollars")
     return money
 
+# allows the user to bet money at specific times
 def bet(userMoney):
     while True:
         time.sleep(.15)
@@ -135,6 +138,8 @@ def bet(userMoney):
             break
     return userMoney, userBet
 
+# if the user or dealer total is over 21, and they have an ace in their hand, 10 is subtracted from the total score.
+# This effectively makes the ace worth 1
 def aceCheck(userCards, userTotal):
     checkSet = ['ACE of DIAMONDS', 'ACE of HEARTS', 'ACE of SPADES', 'ACE of CLUBS']
     for element in checkSet:
@@ -144,12 +149,15 @@ def aceCheck(userCards, userTotal):
             break
     return userTotal
 
+# parses card to find suit and rank to be used in card printing
 def cardParse(card):
     number = card.split(' ')[0]
     suit = card.split(' ')[2]
     parsedCard = [number, suit]
     return parsedCard
 
+# changes royalty and aces to letters for card printing. Creates the part of the card that change in the card printing
+# process. If statement accounts for 10 being double digits
 def cardPrint(parsedCard, brokenCards):
     global number, suit
     blankCard = False
@@ -194,6 +202,7 @@ def cardPrint(parsedCard, brokenCards):
         cardParts = [cardLineTwo, cardLineThree]
         brokenCards.append(cardParts)
 
+# assembles card parts from card print into something cohesive
 def cardPaste(brokenCards):
     topList = []
     topMidList = []
@@ -212,6 +221,7 @@ def cardPaste(brokenCards):
         bottomList.append("└────┘")
     smallDelayPrint(f"{' '.join(bottomList)}")
 
+# the code that puts the above 3 functions together
 def showHand(userHand):
     brokenCards = []
     for n in range(len(userHand)):
@@ -219,6 +229,7 @@ def showHand(userHand):
         cardPrint(parsedCard, brokenCards)
     cardPaste(brokenCards)
 
+# main game logic
 aceStorage = []
 userMoney = generateUserMoney()
 playAgain = True
@@ -261,7 +272,6 @@ while playAgain != 'y' and playAgain != 'n':
                             break
                     else:
                         delayPrint("You have already hit! You can't double down!")
-                # hit and subsequent stands loop
                 elif hitOrStand == 'h':
                     newCard = hit()
                     userTotal = cardValue(newCard) + userTotal
