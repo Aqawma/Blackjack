@@ -238,6 +238,31 @@ while playAgain != 'y' and playAgain != 'n':
     playAgain = input("Do you want to play Blackjack?(y/n)").lower()
     time.sleep(.15)
     if playAgain == 'y':
+        time.sleep(.15)
+        rules = input("Do you know the rules of Blackjack?(y/n)").lower()
+        time.sleep(.15)
+        if rules == 'n':
+            delayPrint("The rules of Blackjack are as follows:")
+            delayPrint(
+                "Your main goal is to have the cards in your hand be higher than the cards in the dealer's hand "
+                "without going over 21!")
+            delayPrint(
+                "You will initially be dealt two cards. After this, you will have the option to hit, stand, "
+                "or double down.")
+            delayPrint("You can initially see only one of the dealer's cards.")
+            delayPrint("If you decide to hit, you will be dealt another card.")
+            delayPrint("If you decide to stand, you effectively end your turn and go into the scoring process.")
+            delayPrint(
+                "If you decide to double down, you double your original bet, get dealt another card, and then stand.")
+            delayPrint("The scoring process determines the winner based on the values of the hands.")
+            delayPrint("Card values are as follows:")
+            delayPrint("  - Number cards (2-10) are worth their face value.")
+            delayPrint("  - Face cards (Jack, Queen, King) are worth 10.")
+            delayPrint("  - Aces can be worth 1 or 11, depending on which value is more favorable for your hand.")
+            delayPrint("If your hand exceeds 21, you bust and automatically lose.")
+            delayPrint("If the dealer busts, you win (provided you haven't already busted).")
+            delayPrint("If neither you nor the dealer busts, the higher hand wins.")
+            delayPrint("In case of a tie, it's a push and your bet is returned.\n")
         while playAgain == 'y' and userMoney != 0:
             userBust = False
             userMoney, userBet = bet(userMoney)
