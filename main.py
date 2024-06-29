@@ -5,7 +5,6 @@
 import random
 import time
 pickedCards = []
-
 # generates a random card and stores it as variable 'card'
 def genCard():
     cardNumber = ['ACE', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'JACK', 'QUEEN', 'KING']
@@ -22,7 +21,6 @@ def genCard():
                 delayPrint("No more cards! Reshuffling!")
             continue
 
-
 def cardValue(card):
     number = card.split(' ')[0]
     if number == 'ACE':
@@ -32,15 +30,13 @@ def cardValue(card):
     else:
         return int(number)
 
-
 # deal a card the user can see one and can't see the other. ask user if they want to hit or stand
 def dealCard():
     visibleCard = genCard()
     hiddenCard = genCard()
     userOriginalCards = [visibleCard, hiddenCard]
-    delayPrint(f"Your cards are {', '.join(userOriginalCards)}")
+    showHand(userOriginalCards)
     return userOriginalCards
-
 
 # deals user a single card
 def hit():
@@ -136,6 +132,84 @@ def aceCheck(userCards, userTotal):
             break
     return userTotal
 
+def cardParse(card):
+    number = card.split(' ')[0]
+    suit = card.split(' ')[2]
+    parsedCard = [number, suit]
+    return parsedCard
+
+def cardPrint(parsedCard, brokenCards):
+    global number, suit
+    blankCard = False
+    if parsedCard[0] == 'ACE':
+        number = 'A'
+    elif parsedCard[0] == 'JACK':
+        number = 'J'
+    elif parsedCard[0] == 'QUEEN':
+        number = 'Q'
+    elif parsedCard[0] == 'KING':
+        number = 'K'
+    elif parsedCard[0] == 'BLANK':
+        blankCard = True
+    else:
+        number = parsedCard[0]
+    if parsedCard[1] == 'SPADES':
+        suit = '♠'
+    elif parsedCard[1] == 'CLUBS':
+        suit = '♣'
+    elif parsedCard[1] == 'DIAMONDS':
+        suit = '♦'
+    elif parsedCard[1] == 'HEARTS':
+        suit = '♥'
+    elif parsedCard[1] == 'BLANK':
+        blankCard = True
+    if number == '10':
+        tenCheck = True
+    else:
+        tenCheck = False
+    if blankCard:
+        cardLineTwo = "│░░░░│"
+        cardLineThree = "│░░░░│"
+        cardParts = [cardLineTwo, cardLineThree]
+        brokenCards.append(cardParts)
+    else:
+        if tenCheck:
+            cardLineTwo = f"│{number} {suit}│"
+            cardLineThree = f"│{suit} {number}│"
+        else:
+            cardLineTwo = f"│{number}  {suit}│"
+            cardLineThree = f"│{suit}  {number}│"
+        cardParts = [cardLineTwo, cardLineThree]
+        brokenCards.append(cardParts)
+
+def cardPaste(brokenCards):
+    topList = []
+    topMidList = []
+    bottomMidList = []
+    bottomList = []
+    if brokenCards[1][1] == '│░░░░│':
+        delayPrint("Dealers cards are:")
+    else:
+        delayPrint("Your cards are:")
+    for n in range(len(brokenCards)):
+        topList.append("┌────┐")
+    print(f"{' '.join(topList)}")
+    for n in range(len(brokenCards)):
+        topMidList.append(brokenCards[n][0])
+    print(f"{' '.join(topMidList)}")
+    for n in range(len(brokenCards)):
+        bottomMidList.append(brokenCards[n][1])
+    print(f"{' '.join(bottomMidList)}")
+    for n in range(len(brokenCards)):
+        bottomList.append("└────┘")
+    print(f"{' '.join(bottomList)}")
+
+def showHand(userHand):
+    brokenCards = []
+    for n in range(len(userHand)):
+        parsedCard = cardParse(userHand[n])
+        cardPrint(parsedCard, brokenCards)
+    cardPaste(brokenCards)
 
 aceStorage = []
 userMoney = generateUserMoney()
@@ -153,7 +227,8 @@ while playAgain != 'y' and playAgain != 'n':
             userTotal = aceCheck(userCards, userTotal)
             dealerTotal, dealerCards = dealerPlay()
             doubleDownProtection = []
-            delayPrint(f"Dealer's visible card is {dealerCards[0]}")
+            singleDealerCard = [dealerCards[0], 'BLANK of BLANK']
+            showHand(singleDealerCard)
             while True:
                 time.sleep(.15)
                 hitOrStand = input("Do you want to hit, stand or double down?(h/s/dd)").lower()
